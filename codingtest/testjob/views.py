@@ -11,12 +11,11 @@ from testjob.serializers import FoodListSerializer
 @api_view(["GET"])
 def get_food(_):
     foods = Food.objects.filter(is_publish=True)
-    categories = FoodCategory.objects.filter(
-        food__is_publish=True
-    ).prefetch_related(
+    categories = FoodCategory.objects.prefetch_related(
         Prefetch(
             'food', queryset=foods
         )
-    )
+    ).filter(food__is_publish__isnull=False).distinct()
+
     response_data: list = FoodListSerializer(categories, many=True).data
     return Response(response_data, status=status.HTTP_200_OK)
