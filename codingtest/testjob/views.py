@@ -15,7 +15,7 @@ def get_food(_):
         Prefetch(
             'food', queryset=foods
         )
-    ).filter(food__is_publish__isnull=False).distinct()
+    ).filter(food__is_publish=True).distinct()
 
     response_data: list = FoodListSerializer(categories, many=True).data
     return Response(response_data, status=status.HTTP_200_OK)
